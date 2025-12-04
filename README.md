@@ -93,4 +93,3 @@ See `schema.sql` for the complete database schema.
 │   └── migrate.ts         # Database migration script
 └── schema.sql            # Database schema definition
 ```
-
