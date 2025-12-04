@@ -1,0 +1,36 @@
+{
+  "name": "family-voice-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "tsx server.ts",
+    "start:next": "next start",
+    "start:prod": "tsx server.ts",
+    "lint": "next lint",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "check-env": "tsx scripts/check-env.ts",
+    "test:api": "node scripts/quick-test.js"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "pg": "^8.11.3",
+    "postgres": "^3.4.3",
+    "dotenv": "^16.3.1",
+    "tsx": "^4.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.9",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.0"
+  }
+}
+
