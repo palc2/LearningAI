@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  // Debug: Log ALL environment variables (masking sensitive ones)
+  const allEnvVars: Record<string, string> = {};
+  Object.keys(process.env).forEach(key => {
+    const value = process.env[key];
+    if (key.includes('PASSWORD') || key.includes('SECRET') || key.includes('TOKEN') || key.includes('KEY')) {
+      allEnvVars[key] = value ? `${value.substring(0, 4)}****` : 'undefined';
+    } else if (key === 'DATABASE_URL') {
+      allEnvVars[key] = value ? value.replace(/:([^:@]+)@/, ':****@') : 'undefined';
+    } else {
+      allEnvVars[key] = value || 'undefined';
+    }
+  });
+
   // Mask password in DATABASE_URL for security
   const dbUrl = process.env.DATABASE_URL;
   const maskedDbUrl = dbUrl ? dbUrl.replace(/:([^:@]+)@/, ':****@') : null;
@@ -31,6 +44,10 @@ export async function GET() {
     databaseUrl: dbUrl ? 'set' : 'missing',
     databaseUrlDetails: dbDetails,
     apiKey: process.env.SUPER_MIND_API_KEY || process.env.AI_BUILDER_TOKEN ? 'set' : 'missing',
+    // Debug: Show all environment variables to diagnose the issue
+    allEnvironmentVariables: allEnvVars,
+    nodeEnv: process.env.NODE_ENV || 'undefined',
+    port: process.env.PORT || 'undefined',
   };
 
   try {
