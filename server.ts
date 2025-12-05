@@ -47,6 +47,7 @@ async function startServer() {
       console.log(`> Ready on http://0.0.0.0:${port}`);
       console.log(`> Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`> Process PID: ${process.pid}`);
+      console.log(`> Server is listening and ready to accept connections`);
     });
 
     server.on('error', (err: NodeJS.ErrnoException) => {
@@ -73,5 +74,11 @@ async function startServer() {
   }
 }
 
+// Start the server
 startServer();
+
+// Ensure process stays alive
+// In Docker/container environments, if the main process exits, the container dies
+// This keeps the Node.js process running
+process.stdin.resume();
 
