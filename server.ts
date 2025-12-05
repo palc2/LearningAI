@@ -79,6 +79,13 @@ startServer();
 
 // Ensure process stays alive
 // In Docker/container environments, if the main process exits, the container dies
-// This keeps the Node.js process running
-process.stdin.resume();
+// Keep the process alive - but handle cases where stdin might not be available
+try {
+  if (process.stdin.isTTY) {
+    process.stdin.resume();
+  }
+} catch (err) {
+  // stdin might not be available in Docker containers - that's okay
+  // The server listening on the port will keep the process alive
+}
 
