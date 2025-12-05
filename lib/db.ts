@@ -1,15 +1,40 @@
 import { Pool } from 'pg';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 // Create a singleton PostgreSQL connection pool
 let pool: Pool | null = null;
 
+/**
+ * Get DATABASE_URL from environment variable or fallback to config file
+ * This allows the app to work in production when env vars aren't set by the platform
+ */
+function getDatabaseUrl(): string {
+  // First, try environment variable (preferred method)
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
+  
+  // Fallback: Try to read from config.production.json (for deployment platforms that don't set env vars)
+  const configPath = join(process.cwd(), 'config.production.json');
+  if (existsSync(configPath)) {
+    try {
+      const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+      if (config.DATABASE_URL) {
+        console.log('📋 Loaded DATABASE_URL from config.production.json');
+        return config.DATABASE_URL;
+      }
+    } catch (error) {
+      console.warn('⚠️  Failed to read config.production.json:', error);
+    }
+  }
+  
+  throw new Error('DATABASE_URL environment variable is not set and config.production.json not found');
+}
+
 export function getDbPool(): Pool {
   if (!pool) {
-    const connectionString = process.env.DATABASE_URL;
-    
-    if (!connectionString) {
-      throw new Error('DATABASE_URL environment variable is not set');
-    }
+    const connectionString = getDatabaseUrl();
 
     pool = new Pool({
       connectionString,
