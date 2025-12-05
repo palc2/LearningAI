@@ -7,10 +7,10 @@ import { parse } from 'url';
 import next from 'next';
 
 const port = parseInt(process.env.PORT || '8000', 10);
-// In production, always use production mode (use built files)
-// Only use dev mode if explicitly set and NODE_ENV is not production
-const dev = process.env.NODE_ENV !== 'production' && !process.env.PORT;
-const app = next({ dev, dir: process.cwd() });
+// In production, always use production mode (use built files from .next directory)
+// Only use dev mode if NODE_ENV is explicitly not 'production'
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
