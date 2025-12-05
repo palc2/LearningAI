@@ -45,3 +45,6 @@ check-deployment.ps1
 # Config files that shouldn't be in container
 deploy-config.json
 
+# Exclude files with very long names (accidental PowerShell output files)
+on*
+
