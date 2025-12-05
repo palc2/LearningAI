@@ -24,33 +24,54 @@ process.on('unhandledRejection', (reason, promise) => {
   // Don't exit in production - let the process manager handle it
 });
 
-app.prepare().then(() => {
-  const server = createServer((req, res) => {
-    try {
-      const parsedUrl = parse(req.url!, true);
-      handle(req, res, parsedUrl);
-    } catch (err) {
-      console.error('Error handling request:', err);
-      res.statusCode = 500;
-      res.end('Internal Server Error');
-    }
-  });
+// Start server
+async function startServer() {
+  try {
+    await app.prepare();
+    console.log('Next.js app prepared successfully');
 
-  server.listen(port, '0.0.0.0', () => {
-    console.log(`> Ready on http://0.0.0.0:${port}`);
-    console.log(`> Environment: ${process.env.NODE_ENV || 'development'}`);
-  });
+    const server = createServer((req, res) => {
+      try {
+        const parsedUrl = parse(req.url!, true);
+        handle(req, res, parsedUrl);
+      } catch (err) {
+        console.error('Error handling request:', err);
+        if (!res.headersSent) {
+          res.statusCode = 500;
+          res.end('Internal Server Error');
+        }
+      }
+    });
 
-  server.on('error', (err: NodeJS.ErrnoException) => {
-    if (err.code === 'EADDRINUSE') {
-      console.error(`Port ${port} is already in use`);
-      process.exit(1);
-    } else {
-      console.error('Server error:', err);
-    }
-  });
-}).catch((err) => {
-  console.error('Failed to prepare Next.js app:', err);
-  process.exit(1);
-});
+    server.listen(port, '0.0.0.0', () => {
+      console.log(`> Ready on http://0.0.0.0:${port}`);
+      console.log(`> Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`> Process PID: ${process.pid}`);
+    });
+
+    server.on('error', (err: NodeJS.ErrnoException) => {
+      if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is already in use`);
+        process.exit(1);
+      } else {
+        console.error('Server error:', err);
+      }
+    });
+
+    // Keep process alive
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM received, shutting down gracefully');
+      server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+      });
+    });
+
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+}
+
+startServer();
 
