@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
+import { checkRateLimit, RateLimitConfigs } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+  // Check rate limit
+  const rateLimitResponse = await checkRateLimit(request, RateLimitConfigs.SESSION_START);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   try {
     const body = await request.json();
     const { householdId, initiatedByUserId } = body;

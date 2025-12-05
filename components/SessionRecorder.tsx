@@ -322,16 +322,16 @@ export default function SessionRecorder({
         {/* Status Display */}
         <div className="text-center">
           {state === 'idle' && (
-            <p className="text-base sm:text-lg text-gray-600 mb-4">
-              <span className="block">Ready to start conversation</span>
-              <span className="block text-sm text-gray-500 mt-1">准备开始对话</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-gray-600 mb-4 font-medium">
+              <span className="block">开始对话</span>
+              <span className="block text-base sm:text-lg md:text-xl text-gray-500 mt-2 font-normal">Ready to speak?</span>
             </p>
           )}
           {state === 'recording-mom' && (
             <div className="space-y-2">
-              <p className="text-lg sm:text-xl font-semibold text-red-600">
-                <span className="block">Recording...</span>
-                <span className="block text-sm text-red-500 mt-1">正在录音...</span>
+              <p className="text-2xl sm:text-3xl md:text-4xl font-semibold text-red-600">
+                <span className="block">正在录音...</span>
+                <span className="block text-xl sm:text-2xl text-red-500 mt-1">Recording...</span>
               </p>
               <div className="flex justify-center space-x-1">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -348,27 +348,27 @@ export default function SessionRecorder({
             </div>
           )}
           {state === 'processing-mom' && (
-            <p className="text-base sm:text-lg text-blue-600">
-              <span className="block">Processing...</span>
-              <span className="block text-sm text-blue-500 mt-1">处理中...</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-blue-600">
+              <span className="block">处理中...</span>
+              <span className="block text-lg sm:text-xl text-blue-500 mt-1">Processing...</span>
             </p>
           )}
           {state === 'playing-english' && (
-            <p className="text-base sm:text-lg text-green-600">
-              <span className="block">Playing English translation...</span>
-              <span className="block text-sm text-green-500 mt-1">正在播放英文翻译...</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-green-600">
+              <span className="block">正在播放英文翻译...</span>
+              <span className="block text-lg sm:text-xl text-green-500 mt-1">Playing English translation...</span>
             </p>
           )}
           {state === 'recording-partner' && (
             <div className="space-y-2">
-              <p className="text-lg sm:text-xl font-semibold text-blue-600">
-                <span className="block">Partner Recording...</span>
-                <span className="block text-sm text-blue-500 mt-1">对方正在录音...</span>
+              <p className="text-2xl sm:text-3xl md:text-4xl font-semibold text-blue-600">
+                <span className="block">对方正在录音...</span>
+                <span className="block text-xl sm:text-2xl text-blue-500 mt-1">Partner Recording...</span>
               </p>
               {countdown !== null && (
-                <p className="text-xs sm:text-sm text-gray-600">
-                  <span className="block">Auto-stopping in {countdown} second{countdown !== 1 ? 's' : ''}</span>
-                  <span className="block text-gray-500 mt-1">{countdown} 秒后自动停止</span>
+                <p className="text-base sm:text-lg text-gray-600">
+                  <span className="block">{countdown} 秒后自动停止</span>
+                  <span className="block text-gray-500 mt-1">Auto-stopping in {countdown} second{countdown !== 1 ? 's' : ''}</span>
                 </p>
               )}
               <div className="flex justify-center space-x-1">
@@ -386,21 +386,21 @@ export default function SessionRecorder({
             </div>
           )}
           {state === 'processing-partner' && (
-            <p className="text-base sm:text-lg text-blue-600">
-              <span className="block">Processing...</span>
-              <span className="block text-sm text-blue-500 mt-1">处理中...</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-blue-600">
+              <span className="block">处理中...</span>
+              <span className="block text-lg sm:text-xl text-blue-500 mt-1">Processing...</span>
             </p>
           )}
           {state === 'playing-chinese' && (
-            <p className="text-base sm:text-lg text-green-600">
-              <span className="block">Playing Chinese translation...</span>
-              <span className="block text-sm text-green-500 mt-1">正在播放中文翻译...</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-green-600">
+              <span className="block">正在播放中文翻译...</span>
+              <span className="block text-lg sm:text-xl text-green-500 mt-1">Playing Chinese translation...</span>
             </p>
           )}
           {state === 'completed' && (
-            <p className="text-base sm:text-lg text-green-600 font-semibold">
-              <span className="block">Session Saved!</span>
-              <span className="block text-sm text-green-500 mt-1 font-normal">会话已保存！</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-green-600 font-semibold">
+              <span className="block">会话已保存！</span>
+              <span className="block text-lg sm:text-xl text-green-500 mt-1 font-normal">Session Saved!</span>
             </p>
           )}
         </div>
@@ -409,46 +409,46 @@ export default function SessionRecorder({
         {state === 'idle' && (
           <button
             onClick={startSession}
-            className="w-full py-5 sm:py-6 md:py-8 px-4 sm:px-6 bg-green-600 hover:bg-green-700 text-white text-lg sm:text-xl md:text-2xl font-bold rounded-lg shadow-lg transition-colors"
+            className="w-full py-6 sm:py-8 md:py-10 px-4 sm:px-6 bg-green-600 hover:bg-green-700 text-white text-2xl sm:text-3xl md:text-4xl font-bold rounded-lg shadow-lg transition-colors"
           >
-            <span className="block">Speak Chinese</span>
-            <span className="block text-base sm:text-lg md:text-xl mt-0.5 sm:mt-1">说中文</span>
+            <span className="block">说中文</span>
+            <span className="block text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2">Speak Chinese</span>
           </button>
         )}
 
         {state === 'recording-mom' && (
           <button
             onClick={handleMomRecording}
-            className="w-full py-5 sm:py-6 md:py-8 px-4 sm:px-6 bg-red-600 hover:bg-red-700 text-white text-lg sm:text-xl md:text-2xl font-bold rounded-lg shadow-lg animate-pulse"
+            className="w-full py-6 sm:py-8 md:py-10 px-4 sm:px-6 bg-red-600 hover:bg-red-700 text-white text-2xl sm:text-3xl md:text-4xl font-bold rounded-lg shadow-lg animate-pulse"
           >
-            <span className="block">Stop Recording</span>
-            <span className="block text-base sm:text-lg md:text-xl mt-0.5 sm:mt-1">停止录音</span>
+            <span className="block">停止录音</span>
+            <span className="block text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2">Stop Recording</span>
           </button>
         )}
 
         {state === 'recording-partner' && (
           <button
             onClick={stopPartnerRecording}
-            className="w-full py-5 sm:py-6 md:py-8 px-4 sm:px-6 bg-blue-600 hover:bg-blue-700 text-white text-lg sm:text-xl md:text-2xl font-bold rounded-lg shadow-lg animate-pulse"
+            className="w-full py-6 sm:py-8 md:py-10 px-4 sm:px-6 bg-blue-600 hover:bg-blue-700 text-white text-2xl sm:text-3xl md:text-4xl font-bold rounded-lg shadow-lg animate-pulse"
           >
-            <span className="block">Stop Recording</span>
-            <span className="block text-base sm:text-lg md:text-xl mt-0.5 sm:mt-1">停止录音</span>
+            <span className="block">停止录音</span>
+            <span className="block text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2">Stop Recording</span>
           </button>
         )}
 
         {state === 'completed' && (
           <button
             onClick={reset}
-            className="w-full py-5 sm:py-6 md:py-8 px-4 sm:px-6 bg-pink-600 hover:bg-pink-700 text-white text-lg sm:text-xl md:text-2xl font-bold rounded-lg shadow-lg"
+            className="w-full py-6 sm:py-8 md:py-10 px-4 sm:px-6 bg-pink-600 hover:bg-pink-700 text-white text-2xl sm:text-3xl md:text-4xl font-bold rounded-lg shadow-lg"
           >
-            <span className="block">Start New Session</span>
-            <span className="block text-base sm:text-lg md:text-xl mt-0.5 sm:mt-1">开始新会话</span>
+            <span className="block">开始新会话</span>
+            <span className="block text-xl sm:text-2xl md:text-3xl mt-1 sm:mt-2">Start New Session</span>
           </button>
         )}
 
         {/* Error Display */}
         {error && (
-          <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-lg sm:text-xl">
             {error}
           </div>
         )}

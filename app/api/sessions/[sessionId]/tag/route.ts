@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 import { tagConversation } from '@/lib/ai-client';
+import { checkRateLimit, RateLimitConfigs } from '@/lib/rate-limit';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { sessionId: string } }
 ) {
+  // Check rate limit
+  const rateLimitResponse = await checkRateLimit(request, RateLimitConfigs.TAGGING);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   try {
     const sessionId = params.sessionId;
 

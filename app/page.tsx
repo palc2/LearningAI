@@ -17,13 +17,14 @@ export default function Home() {
       <div className="container mx-auto px-4 py-2 sm:py-4 max-w-md flex-1 flex flex-col">
         {/* Header */}
         <div className="text-center mb-2 sm:mb-4 flex-shrink-0">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
-            <span className="block">Family Voice Bridge</span>
-            <span className="block text-lg sm:text-xl md:text-2xl text-gray-700 mt-0.5 sm:mt-1">家庭语音桥</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <span className="block">家庭语音桥</span>
+            <span className="block text-3xl sm:text-4xl md:text-5xl text-gray-700 mt-1 sm:mt-2">Family Voice Bridge</span>
           </h1>
-          <p className="text-xs sm:text-sm md:text-base text-gray-600">
-            <span className="block">Speak with one tap, learn as you practice</span>
-            <span className="block text-xs sm:text-sm text-gray-500 mt-0.5">一键说话, 在练中学</span>
+          <p className="text-xl sm:text-2xl md:text-3xl text-gray-600 font-medium">
+            <span className="block">一键说话,</span>
+            <span className="block">在练中学</span>
+            <span className="block text-base sm:text-lg md:text-xl text-gray-500 mt-2 font-normal">Speak with one tap, learn from practice</span>
           </p>
         </div>
 
@@ -42,18 +43,18 @@ export default function Home() {
         <div className="mt-2 sm:mt-4 text-center space-y-2 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row justify-center items-center flex-shrink-0 pb-2 sm:pb-4">
           <Link
             href="/vocabulary"
-            className="w-full sm:w-auto inline-block px-4 sm:px-6 py-2 sm:py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base shadow-md"
+            className="w-full sm:w-auto inline-block px-6 sm:px-8 py-3 sm:py-4 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-lg transition-colors text-lg sm:text-xl shadow-md"
           >
-            <span className="block sm:inline">Daily Vocabulary</span>
-            <span className="block sm:inline text-xs sm:text-sm sm:ml-2">每日词汇</span>
+            <span className="block sm:inline">每日词汇</span>
+            <span className="block sm:inline text-base sm:text-lg sm:ml-2">Daily Vocabulary</span>
             <span className="sm:inline"> →</span>
           </Link>
           <Link
             href="/review"
-            className="w-full sm:w-auto inline-block px-4 sm:px-6 py-2 sm:py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base shadow-md"
+            className="w-full sm:w-auto inline-block px-6 sm:px-8 py-3 sm:py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg transition-colors text-lg sm:text-xl shadow-md"
           >
-            <span className="block sm:inline">Daily Learning</span>
-            <span className="block sm:inline text-xs sm:text-sm sm:ml-2">每日小结</span>
+            <span className="block sm:inline">每日小结</span>
+            <span className="block sm:inline text-base sm:text-lg sm:ml-2">Daily Learning</span>
             <span className="sm:inline"> →</span>
           </Link>
         </div>

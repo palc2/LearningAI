@@ -130,61 +130,62 @@ export default function ReviewPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <div className="container mx-auto px-4 py-4 sm:py-8 max-w-2xl">
+      <div className="container mx-auto px-4 py-4 sm:py-8 max-w-4xl">
         {/* Header */}
-        <div className="mb-4 sm:mb-6">
+        <div className="text-center mb-4 sm:mb-8">
           <Link
             href="/"
             className="text-blue-600 hover:text-blue-800 mb-3 sm:mb-4 inline-block text-sm sm:text-base"
           >
-            <span className="block sm:inline">← Back to Home</span>
-            <span className="block sm:inline text-sm sm:ml-2">返回首页</span>
+            <span className="block sm:inline">← 返回首页</span>
+            <span className="block sm:inline text-sm sm:ml-2">Back to Home</span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">
-            <span className="block">Daily Learning</span>
-            <span className="block text-xl sm:text-2xl text-gray-700 mt-1">每日小结</span>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+            <span className="block">每日小结</span>
+            <span className="block text-2xl sm:text-3xl text-gray-700 mt-1">Daily Learning</span>
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 mb-4">
-            Review your daily conversations and key phrases / 回顾您的每日对话和关键短语
+          <p className="text-base sm:text-lg text-gray-600">
+            <span className="block">回顾您的每日对话和关键短语</span>
+            <span className="block text-sm sm:text-base text-gray-500 mt-1">Review your daily conversations and key phrases</span>
           </p>
-          
-          {/* Date Selector */}
-          <div className="mb-4">
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-              <span className="block">Select date:</span>
-              <span className="block text-xs text-gray-500 mt-1">选择日期：</span>
+        </div>
+
+        {/* Date Selector */}
+        <div className="mb-4 sm:mb-6 flex justify-center">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+            <label htmlFor="date" className="text-gray-700 font-medium text-base sm:text-lg">
+              <span className="block sm:inline">日期：</span>
+              <span className="block sm:inline text-sm sm:ml-2 text-gray-500">Date:</span>
             </label>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
               <input
                 id="date"
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg"
               />
               <button
                 onClick={handleGenerateSummary}
                 disabled={generating}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm sm:text-base"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-base sm:text-lg"
               >
                 {generating ? (
                   <>
-                    <span className="block sm:inline">Generating...</span>
-                    <span className="block sm:inline text-xs sm:ml-2">生成中...</span>
+                    <span className="block sm:inline">生成中...</span>
+                    <span className="block sm:inline text-xs sm:ml-2">Generating...</span>
                   </>
                 ) : summary ? (
                   <>
-                    <span className="block sm:inline">Regenerate Summary</span>
-                    <span className="block sm:inline text-xs sm:ml-2">重新生成摘要</span>
+                    <span className="block sm:inline">重新生成摘要</span>
+                    <span className="block sm:inline text-xs sm:ml-2">Regenerate Summary</span>
                   </>
                 ) : (
                   <>
-                    <span className="block sm:inline">Generate Summary</span>
-                    <span className="block sm:inline text-xs sm:ml-2">生成摘要</span>
+                    <span className="block sm:inline">生成摘要</span>
+                    <span className="block sm:inline text-xs sm:ml-2">Generate Summary</span>
                   </>
                 )}
               </button>
-            </div>
           </div>
         </div>
 
@@ -217,50 +218,50 @@ export default function ReviewPage() {
           <>
             {/* Topic Summary */}
             <section className="mb-6 sm:mb-8 bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
-                <span className="block">AI Summary</span>
-                <span className="block text-lg sm:text-xl text-gray-700 mt-1">AI 摘要</span>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3 sm:mb-4">
+                <span className="block">AI 摘要</span>
+                <span className="block text-2xl sm:text-3xl text-gray-700 mt-1">AI Summary</span>
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    <span className="block">English</span>
-                    <span className="block text-xs text-gray-400 mt-0.5">英文</span>
+                  <h3 className="text-base font-medium text-gray-500 mb-1">
+                    <span className="block">中文</span>
+                    <span className="block text-sm text-gray-400 mt-0.5">Chinese</span>
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-900">{summary.topicSummaryEn}</p>
+                  <p className="text-base sm:text-lg text-gray-900">{summary.topicSummaryZh}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    <span className="block">中文</span>
-                    <span className="block text-xs text-gray-400 mt-0.5">Chinese</span>
+                  <h3 className="text-base font-medium text-gray-500 mb-1">
+                    <span className="block">英文</span>
+                    <span className="block text-sm text-gray-400 mt-0.5">English</span>
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-900">{summary.topicSummaryZh}</p>
+                  <p className="text-base sm:text-lg text-gray-900">{summary.topicSummaryEn}</p>
                 </div>
               </div>
 
               {(summary.whatsNewEn || summary.whatsNewZh) && (
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3">
-                    <span className="block">What&apos;s New Today</span>
-                    <span className="block text-sm text-gray-700 mt-1">今日新内容</span>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
+                    <span className="block">今日新内容</span>
+                    <span className="block text-base text-gray-700 mt-1">What&apos;s New Today</span>
                   </h3>
                   <div className="space-y-4">
-                    {summary.whatsNewEn && (
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-500 mb-1">
-                          <span className="block">English</span>
-                          <span className="block text-xs text-gray-400 mt-0.5">英文</span>
-                        </h4>
-                        <p className="text-sm sm:text-base text-gray-900">{summary.whatsNewEn}</p>
-                      </div>
-                    )}
                     {summary.whatsNewZh && (
                       <div>
-                        <h4 className="text-sm font-medium text-gray-500 mb-1">
+                        <h4 className="text-base font-medium text-gray-500 mb-1">
                           <span className="block">中文</span>
-                          <span className="block text-xs text-gray-400 mt-0.5">Chinese</span>
+                          <span className="block text-sm text-gray-400 mt-0.5">Chinese</span>
                         </h4>
-                        <p className="text-sm sm:text-base text-gray-900">{summary.whatsNewZh}</p>
+                        <p className="text-base sm:text-lg text-gray-900">{summary.whatsNewZh}</p>
+                      </div>
+                    )}
+                    {summary.whatsNewEn && (
+                      <div>
+                        <h4 className="text-base font-medium text-gray-500 mb-1">
+                          <span className="block">英文</span>
+                          <span className="block text-sm text-gray-400 mt-0.5">English</span>
+                        </h4>
+                        <p className="text-base sm:text-lg text-gray-900">{summary.whatsNewEn}</p>
                       </div>
                     )}
                   </div>
@@ -270,9 +271,9 @@ export default function ReviewPage() {
 
             {/* Key Phrases */}
             <section className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
+              <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 <span className="block">短语金句</span>
-                <span className="block text-lg sm:text-xl text-gray-700 mt-1">Key Phrases</span>
+                <span className="block text-2xl sm:text-3xl text-gray-700 mt-1">Key Phrases</span>
               </h2>
               <div className="space-y-4">
                 {phrases.map((phrase) => (
@@ -293,17 +294,17 @@ export default function ReviewPage() {
                             </span>
                           )}
                         </div>
-                        <p className="text-base sm:text-lg font-medium text-gray-900 mb-1">
+                        <p className="text-lg sm:text-xl font-medium text-gray-900 mb-1">
                           {phrase.phraseEn}
                         </p>
-                        <p className="text-sm sm:text-base text-gray-700 mb-2">{phrase.phraseZh}</p>
+                        <p className="text-base sm:text-lg text-gray-700 mb-2">{phrase.phraseZh}</p>
                         {phrase.explanationZh && (
-                          <p className="text-xs sm:text-sm text-gray-600 mb-2">
+                          <p className="text-sm sm:text-base text-gray-600 mb-2">
                             {phrase.explanationZh}
                           </p>
                         )}
                         {phrase.exampleEn && (
-                          <div className="mt-2 text-xs sm:text-sm text-gray-500">
+                          <div className="mt-2 text-sm sm:text-base text-gray-500">
                             <span className="font-medium">
                               <span className="block sm:inline">Example:</span>
                               <span className="block sm:inline text-xs sm:ml-1">示例：</span>

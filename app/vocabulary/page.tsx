@@ -244,48 +244,48 @@ export default function VocabularyPage() {
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-4 py-4 sm:py-8 max-w-4xl">
         <div className="text-center mb-4 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            <span className="block">Daily Vocabulary</span>
-            <span className="block text-xl sm:text-2xl text-gray-700 mt-1">每日词汇</span>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+            <span className="block">每日词汇</span>
+            <span className="block text-2xl sm:text-3xl text-gray-700 mt-1">Daily Vocabulary</span>
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
-            <span className="block">Most frequently used words and phrases</span>
-            <span className="block text-sm text-gray-500 mt-1">最常用的单词和短语</span>
+          <p className="text-base sm:text-lg text-gray-600">
+            <span className="block">最常用的单词和短语</span>
+            <span className="block text-sm sm:text-base text-gray-500 mt-1">Most frequently used words and phrases</span>
           </p>
         </div>
 
         <div className="mb-4 sm:mb-6 flex justify-center">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-            <label htmlFor="date-input" className="text-gray-700 font-medium text-sm sm:text-base">
-              <span className="block sm:inline">Date:</span>
-              <span className="block sm:inline text-xs sm:ml-2 text-gray-500">日期：</span>
+            <label htmlFor="date-input" className="text-gray-700 font-medium text-base sm:text-lg">
+              <span className="block sm:inline">日期：</span>
+              <span className="block sm:inline text-sm sm:ml-2 text-gray-500">Date:</span>
             </label>
             <input
               id="date-input"
               type="date"
               value={date}
               onChange={(e) => handleDateChange(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base sm:text-lg"
             />
             <button
               onClick={() => fetchVocabulary(date, true)}
               disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors text-sm sm:text-base"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors text-base sm:text-lg"
             >
               {loading ? (
                 <>
-                  <span className="block sm:inline">Generating...</span>
-                  <span className="block sm:inline text-xs sm:ml-2">生成中...</span>
+                  <span className="block sm:inline">生成中...</span>
+                  <span className="block sm:inline text-xs sm:ml-2">Generating...</span>
                 </>
               ) : getCachedVocabulary(date) ? (
                 <>
-                  <span className="block sm:inline">Regenerate</span>
-                  <span className="block sm:inline text-xs sm:ml-2">重新生成</span>
+                  <span className="block sm:inline">重新生成</span>
+                  <span className="block sm:inline text-xs sm:ml-2">Regenerate</span>
                 </>
               ) : (
                 <>
-                  <span className="block sm:inline">Generate</span>
-                  <span className="block sm:inline text-xs sm:ml-2">生成</span>
+                  <span className="block sm:inline">生成</span>
+                  <span className="block sm:inline text-xs sm:ml-2">Generate</span>
                 </>
               )}
             </button>
@@ -297,8 +297,8 @@ export default function VocabularyPage() {
             href="/"
             className="inline-block px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-colors text-sm sm:text-base"
           >
-            <span className="block sm:inline">← Back to Home</span>
-            <span className="block sm:inline text-sm sm:ml-2">返回首页</span>
+            <span className="block sm:inline">← 返回首页</span>
+            <span className="block sm:inline text-sm sm:ml-2">Back to Home</span>
           </Link>
         </div>
 
@@ -329,19 +329,19 @@ export default function VocabularyPage() {
         {data && !loading && (
           <div className="space-y-6 sm:space-y-8">
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
                 {formatDate(data.date, data.timezone)}
               </h2>
-              <p className="text-sm sm:text-base text-gray-600">
+              <p className="text-base sm:text-lg text-gray-600">
                 <span className="block">{data.turnCount} conversation turn{data.turnCount !== 1 ? 's' : ''} analyzed</span>
-                <span className="block text-xs text-gray-500 mt-1">分析了 {data.turnCount} 个对话轮次</span>
+                <span className="block text-sm text-gray-500 mt-1">分析了 {data.turnCount} 个对话轮次</span>
               </p>
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
                 <span className="block">Top 5 Nouns</span>
-                <span className="block text-lg sm:text-xl text-gray-700 mt-1">前5个名词</span>
+                <span className="block text-xl sm:text-2xl text-gray-700 mt-1">前5个名词</span>
               </h2>
               {data.nouns.length > 0 ? (
                 <div className="space-y-4">
@@ -399,9 +399,9 @@ export default function VocabularyPage() {
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
                 <span className="block">Top 5 Verbs</span>
-                <span className="block text-lg sm:text-xl text-gray-700 mt-1">前5个动词</span>
+                <span className="block text-xl sm:text-2xl text-gray-700 mt-1">前5个动词</span>
               </h2>
               {data.verbs.length > 0 ? (
                 <div className="space-y-4">
@@ -459,9 +459,9 @@ export default function VocabularyPage() {
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
                 <span className="block">Top 3 Phrases</span>
-                <span className="block text-lg sm:text-xl text-gray-700 mt-1">前3个短语</span>
+                <span className="block text-xl sm:text-2xl text-gray-700 mt-1">前3个短语</span>
               </h2>
               {data.phrases && data.phrases.length > 0 ? (
                 <div className="space-y-4">

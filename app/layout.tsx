@@ -10,6 +10,8 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
+  // Optimized for iPhone 12 Pro: 390x844px
+  themeColor: '#ffffff',
 }
 
 export default function RootLayout({
