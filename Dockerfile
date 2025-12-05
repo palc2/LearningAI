@@ -15,9 +15,8 @@ COPY . .
 
 # Set environment variables
 ENV NODE_ENV=production
-# TEMPORARY WORKAROUND: Hardcode DATABASE_URL since platform env_vars aren't being injected
-# TODO: Fix this once platform env_vars injection is working
-ENV DATABASE_URL=postgresql://neondb_owner:npg_gX3WGIKBz7uD@ep-wispy-moon-adi8seo7-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+# DATABASE_URL should be injected at runtime via platform env_vars
+# Do NOT hardcode sensitive credentials in the Dockerfile
 
 # If your build fails here because it can't connect to DB,
 # you might need to temporarily ignore typescript errors during build
