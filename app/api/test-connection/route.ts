@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const baseUrl = process.env.STUDENT_PORTAL_URL || 'https://api.ai-builders.com/backend';
+  const baseUrl = process.env.STUDENT_PORTAL_URL || 'https://space.ai-builders.com/backend';
   const apiKey = process.env.SUPER_MIND_API_KEY || process.env.AI_BUILDER_TOKEN;
   
   const results = {

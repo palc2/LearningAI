@@ -3,7 +3,7 @@ import { query, queryOne } from '@/lib/db';
 import { translateText } from '@/lib/ai-client';
 
 const STUDENT_PORTAL_BASE_URL =
-  process.env.STUDENT_PORTAL_URL || 'https://api.ai-builders.com/backend';
+  process.env.STUDENT_PORTAL_URL || 'https://space.ai-builders.com/backend';
 
 interface ChatCompletionResponse {
   id: string;
