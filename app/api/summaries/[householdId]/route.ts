@@ -66,6 +66,17 @@ export async function GET(
       [householdId, date]
     );
 
+    // Count conversation turns for this date (same logic as vocabulary API)
+    const turnCountResult = await queryOne<{ count: number }>(
+      `SELECT COUNT(*) as count
+       FROM conversation_turns
+       WHERE household_id = $1
+       AND DATE(ended_at AT TIME ZONE $2) = $3`,
+      [householdId, household.timezone, date]
+    );
+
+    const turnCount = turnCountResult?.count || 0;
+
     return NextResponse.json({
       summary: {
         id: summary.id,
@@ -86,6 +97,8 @@ export async function GET(
         exampleZh: p.example_zh,
         isNewToday: p.is_new_today,
       })),
+      turnCount: turnCount,
+      timezone: household.timezone,
     });
   } catch (error) {
     console.error('Error fetching summary:', error);

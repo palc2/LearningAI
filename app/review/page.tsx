@@ -28,6 +28,13 @@ interface DailySummary {
   generatedAt: string;
 }
 
+interface SummaryResponse {
+  summary: DailySummary;
+  phrases: DailyPhrase[];
+  turnCount?: number;
+  timezone?: string;
+}
+
 export default function ReviewPage() {
   const [summary, setSummary] = useState<DailySummary | null>(null);
   const [phrases, setPhrases] = useState<DailyPhrase[]>([]);
@@ -38,6 +45,8 @@ export default function ReviewPage() {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split('T')[0]
   );
+  const [turnCount, setTurnCount] = useState<number | undefined>(undefined);
+  const [timezone, setTimezone] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     fetchSummary();
@@ -57,19 +66,40 @@ export default function ReviewPage() {
           setError('No summary available for this date. Generate one first! / 此日期没有摘要。请先生成一个！');
           setSummary(null);
           setPhrases([]);
+          setTurnCount(undefined);
+          setTimezone(undefined);
           return;
         }
         throw new Error('Failed to fetch summary / 加载摘要失败');
       }
 
-      const data = await response.json();
+      const data: SummaryResponse = await response.json();
       setSummary(data.summary);
       setPhrases(data.phrases);
+      setTurnCount(data.turnCount);
+      setTimezone(data.timezone);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load summary / 加载摘要失败');
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatDate = (dateStr: string, timezone?: string) => {
+    // Parse the date string (YYYY-MM-DD) and format it
+    // Since dateStr is already a local date string, we just need to format it nicely
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    
+    // Use the timezone from the API if available, otherwise use browser's timezone
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: timezone || undefined,
+    };
+    
+    return date.toLocaleDateString('en-US', options);
   };
 
   const handlePlayPhrase = async (phrase: string, itemId: string) => {
@@ -224,6 +254,19 @@ export default function ReviewPage() {
 
         {summary && (
           <>
+            {/* Date and Conversation Count */}
+            {turnCount !== undefined && (
+              <div className="mb-6 sm:mb-8 bg-white rounded-lg shadow-md p-4 sm:p-6">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
+                  {formatDate(summary.summaryDate, timezone)}
+                </h2>
+                <p className="text-base sm:text-lg text-gray-600">
+                  <span className="block">{turnCount} conversation turn{turnCount !== 1 ? 's' : ''} analyzed</span>
+                  <span className="block text-sm text-gray-500 mt-1">分析了 {turnCount} 个对话轮次</span>
+                </p>
+              </div>
+            )}
+
             {/* Topic Summary */}
             <section className="mb-6 sm:mb-8 bg-white rounded-lg shadow-md p-4 sm:p-6">
               <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3 sm:mb-4">
