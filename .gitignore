@@ -47,3 +47,6 @@ next-env.d.ts
 # Deployment config (may contain sensitive data)
 deploy-config.json
 
+
+# Production config (contains sensitive data)
+config.production.json
