@@ -13,15 +13,44 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+// Handle uncaught errors
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  // Don't exit in production - let the process manager handle it
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit in production - let the process manager handle it
+});
+
 app.prepare().then(() => {
-  createServer((req, res) => {
-    const parsedUrl = parse(req.url!, true);
-    handle(req, res, parsedUrl);
-  }).listen(port, '0.0.0.0', () => {
+  const server = createServer((req, res) => {
+    try {
+      const parsedUrl = parse(req.url!, true);
+      handle(req, res, parsedUrl);
+    } catch (err) {
+      console.error('Error handling request:', err);
+      res.statusCode = 500;
+      res.end('Internal Server Error');
+    }
+  });
+
+  server.listen(port, '0.0.0.0', () => {
     console.log(`> Ready on http://0.0.0.0:${port}`);
+    console.log(`> Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+
+  server.on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${port} is already in use`);
+      process.exit(1);
+    } else {
+      console.error('Server error:', err);
+    }
   });
 }).catch((err) => {
-  console.error('Failed to start server:', err);
+  console.error('Failed to prepare Next.js app:', err);
   process.exit(1);
 });
 
