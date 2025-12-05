@@ -34,6 +34,7 @@ export default function ReviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [playingItem, setPlayingItem] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split('T')[0]
   );
@@ -71,8 +72,15 @@ export default function ReviewPage() {
     }
   };
 
-  const handlePlayPhrase = (phrase: string) => {
-    speakText(phrase, { language: 'en-US' });
+  const handlePlayPhrase = async (phrase: string, itemId: string) => {
+    try {
+      setPlayingItem(itemId);
+      await speakText(phrase, { language: 'en-US' });
+    } catch (err) {
+      console.error('Error playing audio:', err);
+    } finally {
+      setPlayingItem(null);
+    }
   };
 
   const handleGenerateSummary = async () => {
@@ -318,12 +326,23 @@ export default function ReviewPage() {
                         )}
                       </div>
                       <button
-                        onClick={() => handlePlayPhrase(phrase.phraseEn)}
-                        className="w-full sm:w-auto ml-0 sm:ml-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex-shrink-0 text-sm sm:text-base"
+                        onClick={() => handlePlayPhrase(phrase.phraseEn, `phrase-${phrase.id}`)}
+                        disabled={playingItem === `phrase-${phrase.id}`}
+                        className="w-full sm:w-auto ml-0 sm:ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors flex items-center justify-center gap-2 flex-shrink-0 text-base sm:text-lg"
                         aria-label={`Play "${phrase.phraseEn}"`}
                       >
-                        <span className="block sm:inline">🔊 Play</span>
-                        <span className="block sm:inline text-xs sm:ml-2">播放</span>
+                        {playingItem === `phrase-${phrase.id}` ? (
+                          <>
+                            <span className="inline-block animate-spin">⏸</span>
+                            <span className="block sm:inline">播放中...</span>
+                            <span className="block sm:inline text-sm sm:ml-2">Playing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="block sm:inline">🔊 播放</span>
+                            <span className="block sm:inline text-sm sm:ml-2">Play</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>

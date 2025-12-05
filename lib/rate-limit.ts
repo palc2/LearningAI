@@ -12,6 +12,8 @@ interface RateLimitConfig {
   windowMs: number;
   /** Optional custom key generator (defaults to IP address) */
   keyGenerator?: (request: Request) => string | Promise<string>;
+  /** Optional list of IP addresses to exclude from rate limiting (whitelist) */
+  whitelistIPs?: string[];
 }
 
 interface RateLimitResult {
@@ -87,12 +89,23 @@ export async function rateLimit(
   request: Request,
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
-  const { maxRequests, windowMs, keyGenerator } = config;
+  const { maxRequests, windowMs, keyGenerator, whitelistIPs } = config;
   
   // Generate key (default to IP address)
+  const clientIP = getClientIP(request);
   const key = keyGenerator 
     ? await keyGenerator(request)
-    : getClientIP(request);
+    : clientIP;
+  
+  // Check if IP is whitelisted (skip rate limiting)
+  if (whitelistIPs && whitelistIPs.includes(clientIP)) {
+    return {
+      success: true,
+      limit: maxRequests,
+      remaining: maxRequests, // Show full limit remaining
+      reset: Math.ceil((Date.now() + windowMs) / 1000),
+    };
+  }
   
   const now = Date.now();
   const windowStart = now - windowMs;
@@ -137,6 +150,25 @@ export async function rateLimit(
 }
 
 /**
+ * Developer IP whitelist - IPs in this list bypass rate limiting
+ * Add your IP addresses here for unlimited development access
+ * 
+ * Option 1: Set via environment variable (recommended for production)
+ *   DEVELOPER_WHITELIST_IPS="1.2.3.4,5.6.7.8"
+ * 
+ * Option 2: Add directly in the array below (for quick local development)
+ *   ['1.2.3.4', '5.6.7.8']
+ * 
+ * To find your IP: Visit http://localhost:3000/api/my-ip when running locally
+ *                   Or check your public IP at https://api.ipify.org
+ */
+const DEVELOPER_WHITELIST_IPS = (
+  process.env.DEVELOPER_WHITELIST_IPS?.split(',').map(ip => ip.trim()).filter(Boolean) || 
+  // Add your IP addresses here for local development (remove before committing if sensitive)
+  ['108.41.16.119'] // Developer IP - unlimited access for development
+);
+
+/**
  * Predefined rate limit configurations for different endpoints
  */
 export const RateLimitConfigs = {
@@ -144,30 +176,35 @@ export const RateLimitConfigs = {
   SESSION_START: {
     maxRequests: 15,
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
+    whitelistIPs: DEVELOPER_WHITELIST_IPS,
   },
   
   /** Audio processing (mom-turn/reply-turn): 50 requests per hour per IP */
   AUDIO_PROCESSING: {
     maxRequests: 50,
     windowMs: 60 * 60 * 1000, // 1 hour
+    whitelistIPs: DEVELOPER_WHITELIST_IPS,
   },
   
   /** Tagging: 100 requests per hour per IP */
   TAGGING: {
     maxRequests: 100,
     windowMs: 60 * 60 * 1000, // 1 hour
+    whitelistIPs: DEVELOPER_WHITELIST_IPS,
   },
   
   /** Summary generation: 10 requests per day per IP */
   SUMMARY_GENERATION: {
     maxRequests: 10,
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
+    whitelistIPs: DEVELOPER_WHITELIST_IPS,
   },
   
   /** General API: 200 requests per hour per IP */
   GENERAL: {
     maxRequests: 200,
     windowMs: 60 * 60 * 1000, // 1 hour
+    whitelistIPs: DEVELOPER_WHITELIST_IPS,
   },
 } as const;
 
