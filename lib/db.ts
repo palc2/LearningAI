@@ -1,107 +1,68 @@
 import { Pool } from 'pg';
-import { existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import fs from 'fs';
+import path from 'path';
 
-// Create a singleton PostgreSQL connection pool
-let pool: Pool | null = null;
+// 1. Try to get the URL from the system environment variables (Standard for Production)
+let databaseUrl = process.env.DATABASE_URL;
 
-/**
- * Get DATABASE_URL from environment variable or fallback to config file
- * This allows the app to work in production when env vars aren't set by the platform
- */
-function getDatabaseUrl(): string {
-  // First, try environment variable (preferred method)
-  if (process.env.DATABASE_URL) {
-    return process.env.DATABASE_URL;
-  }
+// Debug: Log DATABASE_URL info (mask password for security)
+if (databaseUrl) {
+  const maskedUrl = databaseUrl.replace(/:([^:@]+)@/, ':****@');
+  console.log('📊 DATABASE_URL Debug Info:');
+  console.log(`  - Source: process.env.DATABASE_URL`);
+  console.log(`  - Length: ${databaseUrl.length} characters`);
+  console.log(`  - Masked URL: ${maskedUrl}`);
+  console.log(`  - Has sslmode: ${databaseUrl.includes('sslmode')}`);
+  console.log(`  - Has channel_binding: ${databaseUrl.includes('channel_binding')}`);
   
-  // Fallback: Try to read from config.production.json (for deployment platforms that don't set env vars)
-  const configPath = join(process.cwd(), 'config.production.json');
-  if (existsSync(configPath)) {
-    try {
-      const config = JSON.parse(readFileSync(configPath, 'utf-8'));
-      if (config.DATABASE_URL) {
-        console.log('📋 Loaded DATABASE_URL from config.production.json');
-        return config.DATABASE_URL;
-      }
-    } catch (error) {
-      console.warn('⚠️  Failed to read config.production.json:', error);
-    }
+  // Parse and log connection details (without password)
+  try {
+    const url = new URL(databaseUrl);
+    console.log(`  - Protocol: ${url.protocol}`);
+    console.log(`  - Host: ${url.hostname}`);
+    console.log(`  - Port: ${url.port || '5432 (default)'}`);
+    console.log(`  - Database: ${url.pathname.slice(1)}`);
+    console.log(`  - Username: ${url.username}`);
+    console.log(`  - Query params: ${url.search}`);
+  } catch (e) {
+    console.warn('  ⚠️ Could not parse DATABASE_URL as URL');
   }
-  
-  throw new Error('DATABASE_URL environment variable is not set and config.production.json not found');
+} else {
+  console.warn('⚠️ DATABASE_URL is not set in process.env');
 }
 
-export function getDbPool(): Pool {
-  if (!pool) {
-    const connectionString = getDatabaseUrl();
-
-    pool = new Pool({
-      connectionString,
-      // Connection pool configuration
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
-    });
-
-    // Handle pool errors
-    pool.on('error', (err) => {
-      console.error('Unexpected error on idle client', err);
-    });
+// 2. Fallback: Try to read from config.production.json (Optional: for local dev only)
+if (!databaseUrl) {
+  try {
+    const configPath = path.resolve(process.cwd(), 'config.production.json');
+    if (fs.existsSync(configPath)) {
+      const configFile = fs.readFileSync(configPath, 'utf-8');
+      const config = JSON.parse(configFile);
+      databaseUrl = config.DATABASE_URL;
+      console.log('✅ Loaded DATABASE_URL from local config file');
+    }
+  } catch (error) {
+    console.warn('⚠️ Could not read config file, relying strictly on process.env');
   }
+}
 
+// 3. Security Check
+if (!databaseUrl) {
+  console.error('❌ Critical Error: DATABASE_URL is missing.');
+  throw new Error('DATABASE_URL is not defined in Environment Variables.');
+}
+
+// 4. Create the Pool
+// Neon requires SSL connections. We enforce SSL here.
+console.log('🔌 Creating PostgreSQL connection pool...');
+export const pool = new Pool({
+  connectionString: databaseUrl,
+  ssl: {
+    rejectUnauthorized: false, // Required for many cloud Postgres providers including Neon
+  },
+});
+
+// Helper function for health checks
+export function getDbPool() {
   return pool;
 }
-
-// Helper function to execute queries
-export async function query<T = any>(
-  text: string,
-  params?: any[]
-): Promise<T[]> {
-  try {
-    const db = getDbPool();
-    const result = await db.query(text, params);
-    return result.rows;
-  } catch (error) {
-    // Provide more helpful error messages
-    if (error instanceof Error) {
-      if (error.message.includes('DATABASE_URL')) {
-        throw new Error('Database not configured. Please set DATABASE_URL in your .env file.');
-      }
-      if (error.message.includes('connect') || error.message.includes('ECONNREFUSED')) {
-        throw new Error('Cannot connect to database. Please check your DATABASE_URL and ensure PostgreSQL is running.');
-      }
-    }
-    throw error;
-  }
-}
-
-// Helper function to execute a single row query
-export async function queryOne<T = any>(
-  text: string,
-  params?: any[]
-): Promise<T | null> {
-  const rows = await query<T>(text, params);
-  return rows[0] || null;
-}
-
-// Helper function for transactions
-export async function transaction<T>(
-  callback: (client: any) => Promise<T>
-): Promise<T> {
-  const db = getDbPool();
-  const client = await db.connect();
-  
-  try {
-    await client.query('BEGIN');
-    const result = await callback(client);
-    await client.query('COMMIT');
-    return result;
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release();
-  }
-}
-
