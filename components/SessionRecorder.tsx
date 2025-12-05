@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createAudioRecorder, cleanupRecorder } from '@/lib/audio-recorder';
 import { speakText, stopSpeech } from '@/lib/tts';
-import type { MediaRecorder } from 'mediarecorder';
+// MediaRecorder is a browser API, no need to import types
 
 type SessionState =
   | 'idle'
@@ -32,7 +32,7 @@ export default function SessionRecorder({
   const [countdown, setCountdown] = useState<number | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const countdownRef = useRef<number | null>(null);
-  const countdownIntervalRef = useRef<number | null>(null);
+  const countdownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
 
   // Cleanup on unmount

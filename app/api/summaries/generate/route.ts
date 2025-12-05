@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     // Upsert daily summary and phrases in a transaction
     await transaction(async (client) => {
       // Upsert daily_summaries
-      const summaryUpsert = await client.query<{ id: string }>(
+      const summaryUpsert = await client.query(
         `INSERT INTO daily_summaries (
           household_id,
           summary_date,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
         ]
       );
 
-      const summaryId = summaryUpsert.rows[0].id;
+      const summaryId = (summaryUpsert.rows[0] as { id: string }).id;
 
       // Delete existing phrases for this date
       await client.query(

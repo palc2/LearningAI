@@ -29,6 +29,7 @@ interface ChatCompletionResponse {
     message: {
       role: string;
       content: string | null;
+      tool_calls?: Array<any>;
     };
     finish_reason: string;
   }>;
@@ -84,7 +85,7 @@ export async function transcribeAudio(
   if (Buffer.isBuffer(audioFile)) {
     // Node.js environment - Convert Buffer to Blob for FormData
     // Blob is available globally in Node.js 18+
-    const blob = new Blob([audioFile], { type: 'audio/webm' });
+    const blob = new Blob([audioFile as BlobPart], { type: 'audio/webm' });
     // Use Blob directly - FormData in Node.js accepts Blob
     formData.append('audio_file', blob, 'audio.webm');
   } else {
@@ -112,7 +113,7 @@ export async function transcribeAudio(
   // Recreate FormData with normalized language
   const normalizedFormData = new FormData();
   if (Buffer.isBuffer(audioFile)) {
-    const blob = new Blob([audioFile], { type: 'audio/webm' });
+    const blob = new Blob([audioFile as BlobPart], { type: 'audio/webm' });
     normalizedFormData.append('audio_file', blob, 'audio.webm');
   } else {
     normalizedFormData.append('audio_file', audioFile);
