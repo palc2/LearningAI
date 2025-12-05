@@ -24,6 +24,6 @@ ENV NODE_ENV=production
 
 # Start application using PORT environment variable
 # Use shell form (sh -c) to ensure environment variable expansion works correctly
-# The PORT env var is set by Koyeb at runtime, server.ts reads it from process.env
-CMD sh -c "npm start"
+# Explicitly pass PORT to ensure it's available (server.ts reads from process.env)
+CMD sh -c "PORT=${PORT:-8000} npm start"
 
