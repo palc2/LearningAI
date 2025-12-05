@@ -4,7 +4,7 @@ FROM node:20-slim
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better layer caching
 COPY package*.json ./
 
 # Install dependencies (including dev dependencies needed for build)
@@ -24,5 +24,6 @@ ENV NODE_ENV=production
 
 # Start application using PORT environment variable
 # Use shell form (sh -c) to ensure environment variable expansion
-CMD sh -c "npm start"
+# Explicitly use tsx to run server.ts with PORT from environment
+CMD sh -c "PORT=${PORT:-8000} npm start"
 
