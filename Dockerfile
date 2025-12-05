@@ -13,6 +13,16 @@ RUN npm ci
 # Copy application code
 COPY . .
 
+# Create config.production.json from build arg if provided
+# This allows DATABASE_URL to be passed securely via build_args without committing to git
+ARG DATABASE_URL
+RUN if [ -n "$DATABASE_URL" ]; then \
+      echo "{\"DATABASE_URL\": \"$DATABASE_URL\", \"NODE_ENV\": \"production\"}" > config.production.json && \
+      echo "✅ Created config.production.json from build arg"; \
+    else \
+      echo "⚠️  DATABASE_URL build arg not provided, config file will not be created"; \
+    fi
+
 # Build Next.js application (set NODE_ENV for production build)
 RUN NODE_ENV=production npm run build
 
