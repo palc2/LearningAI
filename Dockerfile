@@ -7,44 +7,28 @@ WORKDIR /app
 # Copy package files first for better layer caching
 COPY package*.json ./
 
-# Install dependencies (including dev dependencies needed for build)
+# Install dependencies
 RUN npm ci
 
 # Copy application code
 COPY . .
 
-# Create config.production.json from build arg if provided
-# This allows DATABASE_URL to be passed securely via build_args without committing to git
-# Do this BEFORE the build so the file is available during build and runtime
+# Accept DATABASE_URL as build argument (will be passed from deployment platform)
 ARG DATABASE_URL
-RUN if [ -n "$DATABASE_URL" ]; then \
-      echo "{\"DATABASE_URL\": \"$DATABASE_URL\", \"NODE_ENV\": \"production\"}" > config.production.json && \
-      echo "✅ Created config.production.json from build arg" && \
-      cat config.production.json; \
-    else \
-      echo "⚠️  DATABASE_URL build arg not provided"; \
-    fi
 
-# Build Next.js application (set NODE_ENV for production build)
-# The config file should persist through the build
-RUN NODE_ENV=production npm run build
+# Set environment variables
+ENV NODE_ENV=production
+# Set DATABASE_URL as environment variable so it's available at runtime
+ENV DATABASE_URL=${DATABASE_URL}
 
-# Verify config file still exists after build
-RUN if [ -f config.production.json ]; then \
-      echo "✅ config.production.json exists after build"; \
-      ls -la config.production.json; \
-    else \
-      echo "⚠️  config.production.json missing after build"; \
-    fi
+# If your build fails here because it can't connect to DB,
+# you might need to temporarily ignore typescript errors during build
+# or provide a dummy variable. For now, let's try standard build.
+RUN npm run build
 
-# Expose port (PORT will be set at runtime by Koyeb)
+# Expose port (Documentation purpose only)
 EXPOSE 8000
 
-# Set NODE_ENV to production for runtime
-ENV NODE_ENV=production
-
 # Start application using PORT environment variable
-# Use shell form (sh -c) to ensure environment variable expansion works correctly
-# Explicitly pass PORT to ensure it's available (server.ts reads from process.env)
+# The application will read DATABASE_URL from the platform's environment
 CMD sh -c "PORT=${PORT:-8000} npm start"
-
